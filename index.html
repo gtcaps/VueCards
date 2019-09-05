@@ -16,15 +16,19 @@
     <div id="app" class="container mt-5">
         {{message}}
         <div class="row">
-            <div class="col-md-4 mt-3" v-for="(list, index) in lists" :key="index">
+            <div class="col-md-6 mt-3" v-for="(list, index) in lists" :key="index">
                 <div class="card">
                     <div class="card-header">
-                        <div class="d-flex justify-content-between">
-                            <h4>{{ list.name }}</h4>
-                            <button class="btn btn-sm "
+                        <div class="d-flex justify-content-center flex-wrap">
+                            <h4 class="d-block w-100 text-center">{{ list.name }}</h4>
+                            <button class="btn btn-sm mr-2"
                                 :class="list.status == 'creating' ? 'btn-warning' : 'btn-danger' "
                                 @click="removeList(index)">
                                 {{   list.status == 'creating' ? 'Cancelar' : 'Eliminar'  }}
+                            </button>
+                            <button class="btn btn-sm btn-success" v-if="list.status == 'saved'"
+                                @click="list.status = 'creating'">
+                                Modificar
                             </button>
                         </div>
                     </div>
@@ -39,17 +43,31 @@
                         </form>
 
                         <!--ADD CARDS-->
-                        <div class="input-group mb-3" v-for = "(card, ind) in list.cards" >
+                        <div class="input-group mb-3" v-if="list.status == 'saved'" v-for="(card, ind) in list.cards">
                             <input 
-                                v-model = "list.cards[ind]"
-                                type="text" 
-                                class="form-control" 
+                                v-model="list.cards[ind].text" 
+                                type="text" class="form-control mr-2"
                                 placeholder="Write some here!" 
-                                aria-label="Write some here!" 
-                                aria-describedby="basic-addon1">
+                                aria-label="Write some here!"
+                                aria-describedby="basic-addon1" 
+                                @keyup.enter="addCard(list.cards)"
+                                :disabled="list.cards[ind].status == 'creating' ? disabled : ''">
+                            <button 
+                                class="btn btn-sm btn-danger mr-2"
+                                v-if="list.cards[ind].status == 'saved'" 
+                                @click="removeCard(list.cards, ind)">
+                                Eliminar
+                            </button>
+                            <button 
+                                class="btn btn-sm btn-success"
+                                v-if="list.cards[ind].status == 'saved'"
+                                @click="list.cards[ind].status = 'creating'">
+                                Modificar
+                            </button>
                         </div>
 
-                        <button v-if="list.status == 'saved' " type="button" class="btn btn-primary" @click = "addCard(list.cards)" >Add Card +</button>
+                        <button v-if="list.status == 'saved' " type="button" class="btn btn-primary"
+                            @click="addCard(list.cards)">Add Card +</button>
                     </div>
                 </div>
             </div>

@@ -24,7 +24,36 @@ var app = new Vue({
       },
 
       addCard(listCards){
-        listCards.push("");
+        
+        const newCard = {
+          text : "",
+          status : "creating"
+        }
+        
+        if(listCards.length == 0){
+          listCards.push(newCard);
+          console.log(listCards.length);
+        }else{
+          console.log(listCards);
+          var vacio = false;
+          listCards.forEach(element => {
+            if(element.text == ""){
+              vacio = true;
+              element.status = "creating";
+            }else{
+              element.status = "saved";
+            }
+          });
+
+          if(vacio){
+            alert("No debes dejar una actividad vacia!")
+          }else{
+            listCards.push(newCard);
+          }
+
+        }
+
+        console.log(listCards);
       },
 
       ver(card, l){
@@ -32,8 +61,18 @@ var app = new Vue({
         console.log(card)
         l[card] = "hola vue"
         console.log(l[card]);
-      }
+      },
+
+      removeCard(listCards, ind){
+        console.log(ind)
+        console.log(listCards.length);
+        listCards.splice(ind, 1);
+        console.log(listCards.length);
+      },
       
+      consola(ind){
+        alert(ind);
+      }
 
     }
   })
